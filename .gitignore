@@ -1,0 +1,9 @@
+env/
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+codegen/**/__pycache__/
+codegen/**/**/__pycache__/
+.DS_store
+codegen.egg-info
+build
+dist
