@@ -2,9 +2,10 @@ env/
 **/.idea/workspace.xml
 **/.idea/tasks.xml
 .idea/
-codegen/**/__pycache__/
-codegen/**/**/__pycache__/
+jenna/**/__pycache__/
+jenna/**/**/__pycache__/
 .DS_store
-codegen.egg-info
+jenna.egg-info
+main.py
 build
 dist
