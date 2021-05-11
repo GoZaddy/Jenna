@@ -3,6 +3,7 @@ from .utils import stringify, triple_stringify
 from .errors import CodegenError
 
 
+# represents anything that requires indentation
 class Block:
     """
     Block is an 'interface' that represents a block of code. It is mostly used for indenting
@@ -24,8 +25,11 @@ class Block:
         pass
 
 
-# The String type is used to differentiate between regular strings and strings that represent code
 class String:
+    """
+    The String type is used to differentiate between regular strings and strings that represent code. It is used to represent actual strings
+    """
+
     def __init__(self, string):
         self.value = string
 
@@ -33,6 +37,7 @@ class String:
         return stringify(self.value)
 
 
+# represents anything that is code and is not a defined type in Jenna
 class Expr(Block):
     """
     This simple class represents a python expression e.g: a < b
@@ -233,7 +238,7 @@ class Class(Block):
             self._description = triple_stringify(description)
 
 
-class Variable:
+class Variable(Block):
     """
     This represents a python variable
 
@@ -242,9 +247,10 @@ class Variable:
         value: value of the variable
     """
 
-    def __init__(self, name, value):
+    def __init__(self, name, value, indent_level=0):
         self.name = name
         self.value = value
+        super().__init__(indent_level=indent_level)
 
     def __str__(self):
         if isinstance(self.value, String) or isinstance(self.value, ClassInstance):
@@ -262,7 +268,7 @@ class Variable:
         self._value = value
 
 
-class ClassInstance:
+class ClassInstance(Block):
     """
     This presents the creation of a class instance in python
 
@@ -272,7 +278,7 @@ class ClassInstance:
         **kwargs: the kwargs passed to the class' init method
     """
 
-    def __init__(self, class_name: str, *args, **kwargs):
+    def __init__(self, class_name: str, _indent_level=0, *args, **kwargs):
         """
         Create a ClassInstance object
         Args:
@@ -283,6 +289,7 @@ class ClassInstance:
         self.class_name = class_name
         self.args = args
         self.kwargs = kwargs
+        super().__init__(indent_level=_indent_level)
 
     def __str__(self):
         args = ', '
@@ -397,3 +404,26 @@ class IfElse(Block):
             elif_.type = 'elif'
             elif_.set_indent_level(self.indent_level)
             self.elifs.append(elif_)
+
+
+class SingleLineComment(Block):
+    def __init__(self, comment: str, indent_level=0):
+        self.comment = comment
+        super().__init__(indent_level=indent_level)
+
+    def __str__(self):
+        tabs = self.get_indent_level() * '\t'
+        return f"\n{tabs}# {self.comment}"
+
+
+class MultilineComment(Block):
+    def __init__(self, comment: [str], indent_level=0):
+        self.comment = comment
+        super().__init__(indent_level=indent_level)
+
+    def __str__(self):
+        tabs = self.get_indent_level() * '\t'
+        lines = ""
+        for line in self.comment:
+            lines += tabs + line + "\n"
+        return '\n' + tabs + '"""\n' + lines + tabs + '"""'

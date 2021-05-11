@@ -12,14 +12,13 @@ def print_hi(name):
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     print_hi('PyCharm')
-from jenna import Jenna, Variable, String
+from jenna import Jenna, Variable, String, MultilineComment
 
-jen = Jenna()
+jen = Jenna(output_file='test.py')
 
-jen.write_variable(
-    Variable(
-        name='variable_name',
-        value=String('variable_value')
+jen.write_block(
+    MultilineComment(
+        comment=["Hey Marcus", "You know you like me", "But do I?"],
     )
 )
 
