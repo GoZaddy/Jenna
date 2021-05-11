@@ -7,5 +7,6 @@ jenna/**/**/__pycache__/
 .DS_store
 jenna.egg-info
 main.py
+test.py
 build
 dist
